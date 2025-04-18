@@ -1,56 +1,39 @@
-# build-and-package.ps1
 Write-Host "Starting build and packaging process..."
 
-# Step 1: Run Vite build
-Write-Host "Running Vite build..."
-npm run build
-
-# Step 2: Copy manifest.json into dist/
-$sourceManifest = "manifest.json"
-$destManifest = "dist/manifest.json"
-if (Test-Path $sourceManifest) {
-    Copy-Item $sourceManifest $destManifest -Force
-    Write-Host "Copied manifest.json to dist/"
-} else {
-    Write-Host "ERROR: manifest.json not found in project root."
-    exit 1
+# Ensure required directories exist
+if (!(Test-Path -Path "./dist")) {
+  New-Item -ItemType Directory -Path "./dist" | Out-Null
+}
+if (!(Test-Path -Path "./builds")) {
+  New-Item -ItemType Directory -Path "./builds" | Out-Null
 }
 
-# Step 3: Patch manifest.json paths
-if (Test-Path $destManifest) {
-    $json = Get-Content $destManifest -Raw | ConvertFrom-Json
+# Clean old build
+Remove-Item -Recurse -Force -ErrorAction SilentlyContinue ./dist/*
 
-    # Update paths
-    if ($json.content_scripts -and $json.content_scripts.Count -gt 0) {
-        $json.content_scripts[0].js = @("content.js")
-        $json.content_scripts[0].css = @("contentStyle.css")
-    }
+# Transpile TypeScript
+Write-Host "Running TypeScript compiler..."
+tsc
 
-    if ($json.background) {
-        $json.background.service_worker = "background.js"
-    }
+# Build the content script separately using vite.content.config.ts
+Write-Host "Building content script with Vite (IIFE)..."
+npx vite build --config vite.content.config.ts
 
-    if ($json.action) {
-        $json.action.default_popup = "popup/index.html"
-    }
+# Then build the rest of the extension using vite.config.ts
+Write-Host "Building extension scripts and popup UI..."
+npx vite build --config vite.config.ts
 
-    # Write patched file
-    $json | ConvertTo-Json -Depth 5 | Set-Content $destManifest -Encoding UTF8
-    Write-Host "Patched manifest.json paths"
-} else {
-    Write-Host "ERROR: Could not find manifest.json in dist/"
-    exit 1
-}
+# Copy manifest.json to dist
+Write-Host "Copying manifest.json to dist..."
+Copy-Item -Path "manifest.json" -Destination "dist/manifest.json" -Force
 
-# Step 4: Zip the dist/ folder
+# Zip the dist folder into builds
 $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-$zipName = "extension_build_$timestamp.zip"
-$outputDir = "builds"
-$outputZip = "$outputDir\$zipName"
+$zipPath = "builds/extension_build_$timestamp.zip"
 
-if (!(Test-Path $outputDir)) {
-    New-Item -ItemType Directory -Path $outputDir | Out-Null
-}
+Write-Host "Creating ZIP package at $zipPath..."
+Add-Type -AssemblyName 'System.IO.Compression.FileSystem'
+[System.IO.Compression.ZipFile]::CreateFromDirectory("dist", $zipPath)
 
-Compress-Archive -Path "dist/*" -DestinationPath $outputZip -Force
-Write-Host "Package created at $outputZip"
+Write-Host "Build and packaging complete!"
+Write-Host "Package created at $zipPath"

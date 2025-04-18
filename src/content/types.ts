@@ -1,3 +1,5 @@
+import { OverlayPanelProps } from '@/components/OverlayPanel';
+
 export interface Prompt {
   id: string;
   title: string;
@@ -25,14 +27,10 @@ export interface IPromptManager {
   deletePrompt(promptId: string): Promise<void>;
 }
 
-export interface OverlayPanelProps {
-  isOpen: boolean;
+export interface QuickAccessBarProps {
+  isVisible: boolean;
   onClose: () => void;
   children: React.ReactNode;
-}
-
-export interface QuickAccessBarProps {
-  promptManager: IPromptManager;
 }
 
 export interface PromptManagerProps {
