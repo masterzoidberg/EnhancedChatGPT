@@ -1,39 +1,46 @@
+
+# Build outputs
+# Chrome Extension
+# Coverage
 # Dependencies
-node_modules/
-.pnp/
-.pnp.js
-
-# Testing
-coverage/
-
-# Production
-dist/
-build/
-
-# Misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
+# Editor configs
+# Editor directories and files
+# Environment files
 # Logs
+# Misc
+# Production
+# Testing
+# TypeScript
+*.crx
+*.log
+*.njsproj
+*.ntvs*
+*.pem 
+*.sln
+*.suo
+*.sw?
+*.tsbuildinfo
+.cursor/
+.DS_Store
+.env
+.env.development.local
+.env.local
+.env.production.local
+.env.test.local
+.idea/
+.pnp.js
+.pnp/
+.roo/
+.roomodes/
+.vscode/
+/coverage/
+/dist/
+/node_modules/
+/web-ext-artifacts/
+build/
+coverage/
+dist/
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Editor directories and files
-.idea/
-.vscode/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# TypeScript
-*.tsbuildinfo
-
-# Chrome Extension
-*.crx
-*.pem 

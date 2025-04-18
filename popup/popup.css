@@ -1,7 +1,0 @@
-@import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
-
-/* Additional popup-specific styles can be added here */
-body {
-  min-width: 200px;
-  max-width: 300px;
-}

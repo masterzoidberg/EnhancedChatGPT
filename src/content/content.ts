@@ -1,80 +1,51 @@
-import { OverlayPanel } from '@/components/OverlayPanel';
-import { QuickAccessBar } from '@/components/QuickAccessBar';
-import { PromptManager } from '@/components/PromptManager';
+// Immediately-invoked content script
+(() => {
+  class ContentScript {
+    private isInitialized = false;
 
-class ContentScript {
-  private overlayPanel: OverlayPanel | null = null;
-  private quickAccessBar: QuickAccessBar | null = null;
-  private promptManager: PromptManager | null = null;
-
-  constructor() {
-    this.initialize();
-  }
-
-  private async initialize() {
-    try {
-      // Initialize components
-      this.promptManager = new PromptManager();
-      this.overlayPanel = new OverlayPanel(this.promptManager);
-      this.quickAccessBar = new QuickAccessBar(this.promptManager);
-
-      // Wait for the chat form to be available
-      await this.waitForChatForm();
-
-      // Attach components to the page
-      this.attachComponents();
-
-      // Set up mutation observer to handle dynamic page changes
-      this.setupMutationObserver();
-    } catch (error) {
-      console.error('Failed to initialize content script:', error);
+    constructor() {
+      this.initialize();
     }
-  }
 
-  private async waitForChatForm(): Promise<HTMLFormElement> {
-    return new Promise((resolve) => {
-      const checkForm = () => {
-        const form = document.querySelector('form');
-        if (form) {
-          resolve(form);
-        } else {
-          setTimeout(checkForm, 100);
-        }
+    private initialize() {
+      if (this.isInitialized) return;
+      this.isInitialized = true;
+
+      // Example: Add a custom button to the ChatGPT page
+      this.injectOverlayButton();
+
+      // Notify background script (optional hook)
+      chrome.runtime.sendMessage({ type: 'contentScriptReady' });
+    }
+
+    private injectOverlayButton() {
+      const existing = document.getElementById('chatgpt-enhancer-btn');
+      if (existing) return;
+
+      const button = document.createElement('button');
+      button.id = 'chatgpt-enhancer-btn';
+      button.innerText = '⚙️ Enhancer';
+      button.style.position = 'fixed';
+      button.style.top = '10px';
+      button.style.right = '10px';
+      button.style.zIndex = '9999';
+      button.style.padding = '6px 12px';
+      button.style.backgroundColor = '#10a37f';
+      button.style.color = '#fff';
+      button.style.border = 'none';
+      button.style.borderRadius = '4px';
+      button.style.fontSize = '14px';
+      button.style.cursor = 'pointer';
+
+      button.onclick = () => {
+        alert('ChatGPT Enhancer clicked!');
+        // You can later dynamically import components here
       };
-      checkForm();
-    });
-  }
 
-  private attachComponents() {
-    if (this.overlayPanel) {
-      this.overlayPanel.attach();
-    }
-    if (this.quickAccessBar) {
-      this.quickAccessBar.attach();
+      document.body.appendChild(button);
     }
   }
 
-  private setupMutationObserver() {
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList') {
-          // Check if the chat form was removed or added
-          const form = document.querySelector('form');
-          if (!form && this.quickAccessBar) {
-            this.quickAccessBar.detach();
-          } else if (form && this.quickAccessBar) {
-            this.quickAccessBar.attach();
-          }
-        }
-      });
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-  }
-}
-
-// Initialize the content script
-new ContentScript(); 
+  // Start the content script
+  new ContentScript();
+})();

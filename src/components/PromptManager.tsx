@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Folder, Prompt, ExtensionSettings } from '@/types/messages';
+import { Folder, Prompt, ExtensionSettings, IPromptManager } from '@/types/messages';
 import { MessageType } from '@/types/messages';
 
-export class PromptManager {
+export class PromptManager implements IPromptManager {
   private folders: Folder[] = [];
   private settings: ExtensionSettings = {
     theme: 'system',
     quickAccessEnabled: true,
     overlayEnabled: true,
+    keyboardShortcuts: {
+      toggleOverlay: "Ctrl+Shift+O",
+      toggleQuickAccess: "Ctrl+Shift+A"
+    }
   };
 
   constructor() {
@@ -45,6 +49,8 @@ export class PromptManager {
       id: Date.now().toString(),
       name,
       prompts: [],
+      createdAt: Date.now(),
+      updatedAt: Date.now()
     };
 
     this.folders.push(newFolder);
@@ -52,28 +58,28 @@ export class PromptManager {
     return newFolder;
   }
 
+  public async updateFolder(folder: Folder): Promise<void> {
+    const index = this.folders.findIndex((f) => f.id === folder.id);
+    if (index !== -1) {
+      this.folders[index] = folder;
+      await this.saveFolders();
+    }
+  }
+
   public async deleteFolder(folderId: string): Promise<void> {
     this.folders = this.folders.filter((folder) => folder.id !== folderId);
     await this.saveFolders();
   }
 
-  public async createPrompt(
-    folderId: string,
-    title: string,
-    content: string,
-    isFavorite = false
-  ): Promise<Prompt> {
+  public async createPrompt(promptData: Omit<Prompt, 'id'>): Promise<Prompt> {
     const newPrompt: Prompt = {
       id: Date.now().toString(),
-      title,
-      content,
-      isFavorite,
-      folderId,
+      ...promptData,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
 
-    const folder = this.folders.find((f) => f.id === folderId);
+    const folder = this.folders.find((f) => f.id === promptData.folderId);
     if (folder) {
       folder.prompts.push(newPrompt);
       await this.saveFolders();
@@ -96,21 +102,13 @@ export class PromptManager {
     }
   }
 
-  public async deletePrompt(folderId: string, promptId: string): Promise<void> {
-    const folder = this.folders.find((f) => f.id === folderId);
-    if (folder) {
-      folder.prompts = folder.prompts.filter((p) => p.id !== promptId);
-      await this.saveFolders();
-    }
-  }
-
-  public async toggleFavorite(folderId: string, promptId: string): Promise<void> {
-    const folder = this.folders.find((f) => f.id === folderId);
-    if (folder) {
-      const prompt = folder.prompts.find((p) => p.id === promptId);
-      if (prompt) {
-        prompt.isFavorite = !prompt.isFavorite;
+  public async deletePrompt(promptId: string): Promise<void> {
+    for (const folder of this.folders) {
+      const index = folder.prompts.findIndex((p) => p.id === promptId);
+      if (index !== -1) {
+        folder.prompts.splice(index, 1);
         await this.saveFolders();
+        break;
       }
     }
   }

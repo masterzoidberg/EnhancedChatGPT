@@ -1,9 +1,11 @@
 export enum MessageType {
   // State management
   GET_STATE = 'GET_STATE',
-  STATE_CHANGED = 'STATE_CHANGED',
-  UPDATE_SETTINGS = 'UPDATE_SETTINGS',
+  TOGGLE_ENABLED = 'TOGGLE_ENABLED',
   TOGGLE_EXTENSION = 'TOGGLE_EXTENSION',
+  UPDATE_SETTINGS = 'UPDATE_SETTINGS',
+  GET_FAVORITE_PROMPTS = 'GET_FAVORITE_PROMPTS',
+  STATE_CHANGED = 'STATE_CHANGED',
 
   // Prompt management
   SAVE_PROMPT = 'SAVE_PROMPT',
@@ -26,7 +28,8 @@ export enum MessageType {
 
 export interface Message {
   type: MessageType;
-  [key: string]: any;
+  settings?: Partial<ExtensionSettings>;
+  prompt?: Prompt;
 }
 
 export interface ExtensionState {
@@ -39,20 +42,49 @@ export interface ExtensionSettings {
   theme: 'light' | 'dark' | 'system';
   quickAccessEnabled: boolean;
   overlayEnabled: boolean;
+  keyboardShortcuts: {
+    toggleOverlay: string;
+    toggleQuickAccess: string;
+  };
 }
 
 export interface Folder {
   id: string;
   name: string;
   prompts: Prompt[];
+  createdAt: number;
+  updatedAt: number;
 }
 
 export interface Prompt {
   id: string;
   title: string;
   content: string;
-  isFavorite: boolean;
   folderId: string;
+  isFavorite: boolean;
   createdAt: number;
   updatedAt: number;
+}
+
+export interface IPromptManager {
+  getFavoritePrompts(): Promise<Prompt[]>;
+  getFolders(): Promise<Folder[]>;
+  createFolder(name: string): Promise<Folder>;
+  updateFolder(folder: Folder): Promise<void>;
+  deleteFolder(folderId: string): Promise<void>;
+  createPrompt(prompt: Omit<Prompt, 'id'>): Promise<Prompt>;
+  updatePrompt(prompt: Prompt): Promise<void>;
+  deletePrompt(promptId: string): Promise<void>;
+}
+
+export interface OverlayPanelProps {
+  isVisible: boolean;
+  onClose: () => void;
+  promptManager: IPromptManager;
+}
+
+export interface QuickAccessBarProps {
+  isVisible: boolean;
+  onClose: () => void;
+  promptManager: IPromptManager;
 } 

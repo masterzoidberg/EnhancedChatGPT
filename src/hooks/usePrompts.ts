@@ -19,14 +19,16 @@ export function usePrompts({ initialFolders = [] }: UsePromptsOptions = {}) {
       id: generateId(),
       name,
       prompts: [],
+      createdAt: Date.now(),
+      updatedAt: Date.now()
     };
 
-    setFolders((prev) => [...prev, newFolder]);
+    setFolders((prev: Folder[]) => [...prev, newFolder]);
     return newFolder;
   }, []);
 
   const deleteFolder = useCallback((folderId: string) => {
-    setFolders((prev) => prev.filter((folder) => folder.id !== folderId));
+    setFolders((prev: Folder[]) => prev.filter((folder) => folder.id !== folderId));
     if (selectedFolder?.id === folderId) {
       setSelectedFolder(null);
     }
@@ -48,7 +50,7 @@ export function usePrompts({ initialFolders = [] }: UsePromptsOptions = {}) {
         updatedAt: Date.now(),
       };
 
-      setFolders((prev) =>
+      setFolders((prev: Folder[]) =>
         prev.map((folder) =>
           folder.id === folderId
             ? { ...folder, prompts: [...folder.prompts, newPrompt] }
@@ -66,7 +68,7 @@ export function usePrompts({ initialFolders = [] }: UsePromptsOptions = {}) {
       throw new Error('Invalid prompt data');
     }
 
-    setFolders((prev) =>
+    setFolders((prev: Folder[]) =>
       prev.map((folder) =>
         folder.id === prompt.folderId
           ? {
@@ -81,7 +83,7 @@ export function usePrompts({ initialFolders = [] }: UsePromptsOptions = {}) {
   }, []);
 
   const deletePrompt = useCallback((folderId: string, promptId: string) => {
-    setFolders((prev) =>
+    setFolders((prev: Folder[]) =>
       prev.map((folder) =>
         folder.id === folderId
           ? { ...folder, prompts: folder.prompts.filter((p) => p.id !== promptId) }
@@ -91,7 +93,7 @@ export function usePrompts({ initialFolders = [] }: UsePromptsOptions = {}) {
   }, []);
 
   const toggleFavorite = useCallback((folderId: string, promptId: string) => {
-    setFolders((prev) =>
+    setFolders((prev: Folder[]) =>
       prev.map((folder) =>
         folder.id === folderId
           ? {

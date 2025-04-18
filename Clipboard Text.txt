@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Base directory (adjust this if needed)
+BASE_DIR="ChatGPTPromptsFolder"
+
+# Files to clean up (keeping the first one, removing the rest)
+declare -A files_to_keep
+
+# Pass 1: Collect first-seen file path for each filename
+while IFS= read -r -d '' file; do
+  filename=$(basename "$file")
+  if [[ -z "${files_to_keep[$filename]}" ]]; then
+    files_to_keep["$filename"]="$file"
+  fi
+done < <(find "$BASE_DIR" -type f \( -name '.prettierrc' -o -name 'LICENSE' -o -name 'README.md' -o -name 'package.json' -o -name 'postcss.config.js' \) -print0)
+
+# Pass 2: Delete all other occurrences
+for filename in "${!files_to_keep[@]}"; do
+  echo "Keeping: ${files_to_keep[$filename]}"
+  find "$BASE_DIR" -type f -name "$filename" ! -path "${files_to_keep[$filename]}" -exec echo "Deleting: {}" \; -exec rm {} \;
+done

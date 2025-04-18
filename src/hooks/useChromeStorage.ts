@@ -8,13 +8,23 @@ interface UseChromeStorageOptions<T> {
   defaultValue: T;
 }
 
+const defaultSettings: ExtensionSettings = {
+  theme: 'system',
+  quickAccessEnabled: true,
+  overlayEnabled: true,
+  keyboardShortcuts: {
+    toggleOverlay: "Alt+Shift+O",
+    toggleQuickAccess: "Alt+Shift+Q"
+  }
+};
+
 export function useChromeStorage<T>({ key, defaultValue }: UseChromeStorageOptions<T>) {
   const [value, setValue] = useState<T>(defaultValue);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Load initial value
-    chrome.storage.local.get([key], (result) => {
+    chrome.storage.local.get([key], (result: { [key: string]: T }) => {
       if (result[key] !== undefined) {
         setValue(result[key]);
       }
@@ -24,7 +34,7 @@ export function useChromeStorage<T>({ key, defaultValue }: UseChromeStorageOptio
     // Listen for changes
     const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
       if (changes[key]) {
-        setValue(changes[key].newValue);
+        setValue(changes[key].newValue as T);
       }
     };
 
@@ -54,11 +64,7 @@ export function useFolders() {
 export function useSettings() {
   return useChromeStorage<ExtensionSettings>({
     key: 'settings',
-    defaultValue: {
-      theme: 'system',
-      quickAccessEnabled: true,
-      overlayEnabled: true,
-    },
+    defaultValue: defaultSettings,
   });
 }
 
