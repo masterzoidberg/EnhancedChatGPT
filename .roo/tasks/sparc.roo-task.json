@@ -1,0 +1,5 @@
+{
+  "mode": "sparc",
+  "task": "Break down the project 'Build a secure onboarding system with SSO and 2FA' into delegated subtasks aligned with the SPARC methodology.",
+  "model": "deepseek-coder:instruct"
+}

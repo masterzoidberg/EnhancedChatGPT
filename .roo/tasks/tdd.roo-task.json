@@ -1,0 +1,5 @@
+{
+  "mode": "tdd",
+  "task": "Write failing tests first for user signup, login, 2FA verification, and session management. Ensure coverage of edge cases.",
+  "model": "gpt-4o:thinking"
+}

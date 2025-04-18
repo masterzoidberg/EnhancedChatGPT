@@ -1,0 +1,5 @@
+{
+  "mode": "integration",
+  "task": "Merge all modules of the onboarding system into a cohesive deployment-ready codebase. Ensure modular boundaries and consistent config patterns.",
+  "model": "gpt-4o:thinking"
+}

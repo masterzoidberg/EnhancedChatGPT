@@ -1,0 +1,5 @@
+{
+  "mode": "tutorial",
+  "task": "Teach a new developer how to use SPARC modes to structure and delegate tasks for a modular SSO onboarding system. Use practical examples and call out `new_task` and `attempt_completion` flow.",
+  "model": "gpt-4o:thinking"
+}

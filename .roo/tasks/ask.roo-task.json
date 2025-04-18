@@ -1,0 +1,5 @@
+{
+  "mode": "ask",
+  "task": "Guide the user on how to formulate modular SPARC tasks for building a secure authentication system with 2FA and SSO.",
+  "model": "deepseek-coder:instruct"
+}

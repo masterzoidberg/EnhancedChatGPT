@@ -1,0 +1,5 @@
+{
+  "mode": "debug",
+  "task": "Trace and resolve login failures under the new 2FA logic. Use logs and traces to isolate the issue without altering configurations directly.",
+  "model": "gpt-4o:thinking"
+}

@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "chrome-extension-tools": {
+      "command": "node",
+      "args": [
+        "C:/Users/nicol/AppData/Roaming/Roo-Code/MCP/chrome-extension-tools/build/index.js"
+      ],
+      "type": "stdio",
+      "description": "MCP server for Chrome Extension development automation",
+      "alwaysAllow": [
+        "scaffold_component",
+        "build_extension",
+        "test_extension",
+        "package_extension"
+      ]
+    }
+  }
+}

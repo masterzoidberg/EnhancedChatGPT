@@ -1,0 +1,275 @@
+/* ChatGPT Enhancer - Minimal CSS (Safe Mode) */
+
+/* Reserved for future UI enhancements - currently disabled to avoid conflicts */
+
+/* This comment block serves as a placeholder for the original CSS */
+/* No styles are being applied in safe mode to ensure full compatibility */
+
+#chatgpt-enhancer-quick-access-bar {
+  position: relative;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  background-color: transparent;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  max-width: 100%;
+}
+
+#chatgpt-enhancer-quick-access-bar::-webkit-scrollbar {
+  height: 6px;
+}
+
+#chatgpt-enhancer-quick-access-bar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#chatgpt-enhancer-quick-access-bar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+#chatgpt-enhancer-quick-access-bar button {
+  height: 2rem;
+  padding: 0 0.75rem;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(229, 231, 235);
+  border-radius: 0.375rem;
+  color: rgb(75, 85, 99);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  flex-shrink: 0;
+}
+
+#chatgpt-enhancer-quick-access-bar button:hover {
+  background-color: rgb(249, 250, 251);
+  border-color: rgb(209, 213, 219);
+}
+
+#chatgpt-enhancer-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: var(--overlay-width, 420px);
+  height: 100vh;
+  background-color: rgb(255, 255, 255);
+  box-shadow: -4px 0 6px -1px rgba(0, 0, 0, 0.1), -2px 0 4px -1px rgba(0, 0, 0, 0.06);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+}
+
+#chatgpt-enhancer-overlay.visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+#chatgpt-enhancer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  z-index: 9999;
+}
+
+#chatgpt-enhancer-backdrop.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+#chatgpt-enhancer-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.375rem;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(229, 231, 235);
+  color: rgb(75, 85, 99);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+#chatgpt-enhancer-toggle:hover {
+  background-color: rgb(249, 250, 251);
+  border-color: rgb(209, 213, 219);
+}
+
+.overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid rgb(229, 231, 235);
+}
+
+.overlay-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: rgb(17, 24, 39);
+}
+
+.close-button {
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  color: rgb(107, 114, 128);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s;
+}
+
+.close-button:hover {
+  background-color: rgb(243, 244, 246);
+}
+
+.overlay-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.overlay-pane {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.overlay-pane.left {
+  width: 200px;
+  border-right: 1px solid rgb(229, 231, 235);
+}
+
+.overlay-pane.right {
+  flex: 1;
+}
+
+.pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgb(229, 231, 235);
+}
+
+.pane-header h3 {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgb(75, 85, 99);
+}
+
+.add-folder-button,
+.add-prompt-button {
+  padding: 0.25rem;
+  background: transparent;
+  border: none;
+  color: rgb(107, 114, 128);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s;
+}
+
+.add-folder-button:hover,
+.add-prompt-button:hover {
+  background-color: rgb(243, 244, 246);
+}
+
+.folder-tree,
+.prompt-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  #chatgpt-enhancer-quick-access-bar button {
+    background-color: rgb(31, 41, 55);
+    border-color: rgb(75, 85, 99);
+    color: rgb(209, 213, 219);
+  }
+
+  #chatgpt-enhancer-quick-access-bar button:hover {
+    background-color: rgb(55, 65, 81);
+    border-color: rgb(107, 114, 128);
+  }
+
+  #chatgpt-enhancer-overlay {
+    background-color: rgb(31, 41, 55);
+    box-shadow: -4px 0 6px -1px rgba(0, 0, 0, 0.2), -2px 0 4px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  #chatgpt-enhancer-toggle {
+    background-color: rgb(31, 41, 55);
+    border-color: rgb(75, 85, 99);
+    color: rgb(209, 213, 219);
+  }
+
+  #chatgpt-enhancer-toggle:hover {
+    background-color: rgb(55, 65, 81);
+    border-color: rgb(107, 114, 128);
+  }
+
+  .overlay-header {
+    border-bottom-color: rgb(55, 65, 81);
+  }
+
+  .overlay-header h2 {
+    color: rgb(229, 231, 235);
+  }
+
+  .close-button {
+    color: rgb(156, 163, 175);
+  }
+
+  .close-button:hover {
+    background-color: rgb(55, 65, 81);
+  }
+
+  .overlay-pane.left {
+    border-right-color: rgb(55, 65, 81);
+  }
+
+  .pane-header {
+    border-bottom-color: rgb(55, 65, 81);
+  }
+
+  .pane-header h3 {
+    color: rgb(156, 163, 175);
+  }
+
+  .add-folder-button,
+  .add-prompt-button {
+    color: rgb(156, 163, 175);
+  }
+
+  .add-folder-button:hover,
+  .add-prompt-button:hover {
+    background-color: rgb(55, 65, 81);
+  }
+}

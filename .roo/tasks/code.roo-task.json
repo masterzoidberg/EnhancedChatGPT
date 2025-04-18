@@ -1,0 +1,5 @@
+{
+  "mode": "code",
+  "task": "Implement the onboarding module with passwordless SSO and 2FA using clean architecture. Split into files under 500 lines. Externalize all configuration.",
+  "model": "gpt-4o:thinking"
+}

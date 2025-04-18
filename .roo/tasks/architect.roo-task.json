@@ -1,0 +1,5 @@
+{
+  "mode": "architect",
+  "task": "Design a modular architecture for the onboarding system, including service boundaries, API flows, and secure storage handling. Use Mermaid diagrams.",
+  "model": "deepseek-coder:instruct"
+}

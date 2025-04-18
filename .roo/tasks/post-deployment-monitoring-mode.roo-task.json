@@ -1,0 +1,5 @@
+{
+  "mode": "post-deployment-monitoring-mode",
+  "task": "Set up monitoring for onboarding system post-launch, including performance metrics, logs, uptime alerts, and error tracking.",
+  "model": "gpt-4o:thinking"
+}

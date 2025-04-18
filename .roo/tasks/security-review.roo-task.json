@@ -1,0 +1,5 @@
+{
+  "mode": "security-review",
+  "task": "Audit the onboarding module for secrets, environment leaks, and insecure patterns. Flag files over 500 lines or direct env coupling.",
+  "model": "gpt-4o:thinking"
+}

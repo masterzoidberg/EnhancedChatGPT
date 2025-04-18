@@ -1,0 +1,5 @@
+{
+  "mode": "refinement-optimization-mode",
+  "task": "Refactor the onboarding module for better performance and maintainability. Split large files, remove redundancy, and decouple configs.",
+  "model": "gpt-4o:thinking"
+}

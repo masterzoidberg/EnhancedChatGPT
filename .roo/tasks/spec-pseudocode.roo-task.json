@@ -1,0 +1,5 @@
+{
+  "mode": "spec-pseudocode",
+  "task": "Create detailed pseudocode and modular specifications for the secure onboarding system with SSO and 2FA. Include edge cases and TDD anchors.",
+  "model": "deepseek-coder:instruct"
+}

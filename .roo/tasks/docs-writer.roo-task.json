@@ -1,0 +1,5 @@
+{
+  "mode": "docs-writer",
+  "task": "Write Markdown documentation for the onboarding system setup, API usage, environment config, and deployment instructions.",
+  "model": "deepseek-coder:instruct"
+}

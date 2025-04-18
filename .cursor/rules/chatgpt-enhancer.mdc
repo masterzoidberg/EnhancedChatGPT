@@ -1,0 +1,218 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+ # ChatGPT Enhancer Chrome Extension Development Guidelines
+
+This rule provides comprehensive guidelines for developing the ChatGPT Enhancer Chrome Extension, covering code organization, architecture, styling, performance, security, and accessibility requirements.
+
+## Code Organization and Structure
+
+### Directory Structure
+```
+chatgpt-enhancer/
+├── content/
+│   ├── ui/
+│   │   ├── OverlayPanel.js
+│   │   ├── PromptManager.js
+│   │   └── components/
+│   ├── contentScript.js
+│   └── contentStyle.css
+├── background/
+│   └── background.js
+└── manifest.json
+```
+
+### File Naming Conventions
+- Use lowercase with descriptive names
+- JavaScript/TypeScript files: camelCase (e.g., `contentScript.js`, `promptManager.js`)
+- CSS files: kebab-case (e.g., `content-style.css`)
+- Component files: PascalCase (e.g., `OverlayPanel.js`)
+
+### Component Architecture
+1. **Overlay Panel**
+   - Must maintain z-index: 10000
+   - Implement two-pane layout
+   - Handle keyboard navigation
+   - Support responsive design
+
+2. **Prompt Manager**
+   - Follow CRUD pattern for prompts/folders
+   - Implement proper state management
+   - Support drag-and-drop operations
+   - Handle keyboard shortcuts
+
+3. **Content Script**
+   - Use module pattern to avoid global scope pollution
+   - Implement proper cleanup on unload
+   - Follow event delegation pattern
+   - Handle SPA navigation gracefully
+
+## Styling Guidelines
+
+### CSS Organization
+1. **File Structure**
+   - Component-specific styles in sections
+   - Dark mode variants immediately after base styles
+   - Z-index hierarchy must be maintained:
+     - Modals: 10001
+     - Overlay: 10000
+     - Backdrop: 9999
+
+2. **Naming Conventions**
+   - Use BEM methodology
+   - Prefix classes with `chatgpt-enhancer-`
+   - Use semantic class names
+
+3. **Color System**
+   - Primary: #3b82f6 (Blue)
+   - Text: #111827 (Dark)
+   - Background: White
+   - Dark mode variants required
+
+4. **Layout**
+   - Use Flexbox/Grid for layouts
+   - Maintain consistent spacing (8px grid)
+   - Support responsive breakpoints
+
+## State Management
+
+### Storage Patterns
+1. **Chrome Storage**
+   - Use chrome.storage.local for persistence
+   - Implement proper error handling
+   - Cache frequently accessed data
+   - Handle storage limits
+
+2. **Runtime State**
+   - Use proper state management patterns
+   - Implement proper cleanup
+   - Handle state conflicts
+
+## Security Requirements
+
+1. **Content Security Policy**
+   - Strict CSP implementation required
+   - No inline scripts/styles
+   - Secure message passing between components
+
+2. **Data Protection**
+   - Encrypt sensitive data
+   - Sanitize user inputs
+   - Prevent XSS attacks
+   - Handle permissions securely
+
+## Performance Guidelines
+
+1. **DOM Operations**
+   - Batch DOM updates
+   - Use document fragments
+   - Implement proper event delegation
+   - Clean up event listeners
+
+2. **Resource Management**
+   - Minimize memory usage
+   - Implement proper garbage collection
+   - Use efficient data structures
+   - Cache expensive computations
+
+## Accessibility Requirements
+
+1. **Keyboard Navigation**
+   - All features must be keyboard accessible
+   - Implement proper focus management
+   - Support standard keyboard shortcuts
+   - Trap focus in modals
+
+2. **Screen Reader Support**
+   - Use semantic HTML
+   - Implement ARIA labels
+   - Provide text alternatives
+   - Test with screen readers
+
+## Error Handling
+
+1. **Runtime Errors**
+   - Implement proper error boundaries
+   - Log errors appropriately
+   - Provide user feedback
+   - Handle recovery gracefully
+
+2. **Edge Cases**
+   - Handle network failures
+   - Manage storage limits
+   - Handle permission changes
+   - Support offline operation
+
+## Testing Requirements
+
+1. **Unit Tests**
+   - Test component functionality
+   - Verify state management
+   - Check error handling
+   - Validate accessibility
+
+2. **Integration Tests**
+   - Test component interactions
+   - Verify storage operations
+   - Check DOM integration
+   - Validate event handling
+
+## Documentation
+
+1. **Code Comments**
+   - Document complex logic
+   - Explain non-obvious solutions
+   - Document known issues
+   - Include usage examples
+
+2. **Type Definitions**
+   - Use TypeScript where possible
+   - Document interfaces
+   - Define proper types
+   - Include JSDoc comments
+
+## Version Control
+
+1. **Commit Messages**
+   - Use conventional commits
+   - Reference issues/PRs
+   - Include context
+   - Document breaking changes
+
+2. **Branch Strategy**
+   - Feature branches
+   - Release branches
+   - Hotfix branches
+   - Main/development branches
+
+## Build and Deploy
+
+1. **Build Process**
+   - Minify and optimize
+   - Generate source maps
+   - Bundle efficiently
+   - Handle assets properly
+
+2. **Deployment**
+   - Version management
+   - Release notes
+   - Update notifications
+   - Rollback strategy
+
+## Maintenance
+
+1. **Code Quality**
+   - Regular audits
+   - Performance monitoring
+   - Security updates
+   - Dependency management
+
+2. **User Support**
+   - Error tracking
+   - Usage analytics
+   - Feature requests
+   - Bug reports
+
+Follow these guidelines to ensure consistent, maintainable, and high-quality development of the ChatGPT Enhancer Chrome Extension.

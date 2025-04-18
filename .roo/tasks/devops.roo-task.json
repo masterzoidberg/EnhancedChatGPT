@@ -1,0 +1,5 @@
+{
+  "mode": "devops",
+  "task": "Deploy the onboarding system using CI/CD. Set up env config via secrets manager, verify TLS, and automate rollback procedures.",
+  "model": "gpt-4o:thinking"
+}
