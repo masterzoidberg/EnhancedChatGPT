@@ -1,4 +1,5 @@
-import { ExtensionSettings, Folder, Prompt } from '@/types/messages';
+import { ExtensionSettings } from '@/types/messages';
+import { Folder, Prompt } from '@/types/common';
 
 /**
  * Generate a unique ID

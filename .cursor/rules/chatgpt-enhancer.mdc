@@ -1,249 +1,190 @@
 ---
 description: 
 globs: 
-alwaysApply: true
----
----
-title: ChatGPT Enhancer Chrome Extension Development Guidelines
-description: USE WHEN developing, reviewing, or maintaining the ChatGPT Enhancer Chrome Extension. Applies to code organization, architecture, styling, performance, security, accessibility, testing, documentation, version control, build, deploy, and maintenance.
-globs: chatgpt-enhancer/**/*, chatgpt-enhancer/**/*
 alwaysApply: false
 ---
-
- # ChatGPT Enhancer Chrome Extension Development Guidelines
+# ChatGPT Enhancer Chrome Extension Development Guidelines
 
 This rule provides comprehensive guidelines for developing the ChatGPT Enhancer Chrome Extension, covering code organization, architecture, styling, performance, security, and accessibility requirements.
 
-
-
-
+> 🧠 RIPER Principles:
+> - Fix causes, not symptoms
+> - Don’t be helpful — be better
+> - Write better code
+> - Be very detailed in summarization and never omit what’s important
 
 ## Code Organization and Structure
 
 ### Directory Structure
-```
 chatgpt-enhancer/
 ├── content/
 │   ├── ui/
-│   │   ├── OverlayPanel.js
-│   │   ├── PromptManager.js
-│   │   └── components/
-│   ├── contentScript.js
+│   │   ├── OverlayPanel.tsx
+│   │   ├── FolderList.tsx
+│   │   ├── FolderItem.tsx
+│   │   └── PromptManager.ts
+│   ├── contentScript.ts
 │   └── contentStyle.css
 ├── background/
-│   └── background.js
+│   └── background.ts
 └── manifest.json
-```
 
 ### File Naming Conventions
-- Use lowercase with descriptive names
-- JavaScript/TypeScript files: camelCase (e.g., `contentScript.js`, `promptManager.js`)
-- CSS files: kebab-case (e.g., `content-style.css`)
-- Component files: PascalCase (e.g., `OverlayPanel.js`)
+- Use lowercase with descriptive names for utility scripts
+- TypeScript files: PascalCase for components, camelCase for helpers
+- CSS files: kebab-case
+- Components must reside in `ui/components` when modular
 
 ### Component Architecture
+
 1. **Overlay Panel**
-   - Must maintain z-index: 10000
-   - Implement two-pane layout
-   - Handle keyboard navigation
-   - Support responsive design
+   - Fixed `z-index: 10000`
+   - Two-pane layout (sidebar + main content)
+   - Toggle button with drag support
+   - Integrates `FolderList` in the sidebar
 
 2. **Prompt Manager**
-   - Follow CRUD pattern for prompts/folders
-   - Implement proper state management
-   - Support drag-and-drop operations
-   - Handle keyboard shortcuts
+   - Manages all folder and prompt state
+   - Provides `getFolders()`, `setActiveFolderId()`, `getActiveFolderId()`
+   - Initializes with a hardcoded list of folders (for MVP)
+   - Future: sync with `chrome.storage.local`
+   - Must remain stateless across reloads
 
-3. **Content Script**
-   - Use module pattern to avoid global scope pollution
-   - Implement proper cleanup on unload
-   - Follow event delegation pattern
-   - Handle SPA navigation gracefully
+3. **FolderList & FolderItem**
+   - Stateless UI-only components
+   - Rendered within `OverlayPanel`
+   - Highlight selected folder
+   - Call `PromptManager` methods on click
+
+4. **Content Script**
+   - Uses Shadow DOM for React root injection
+   - Mounts overlay safely with lifecycle checks
+   - Prevents double injection via ID guards
+
+---
 
 ## Styling Guidelines
 
-### CSS Organization
-1. **File Structure**
-   - Component-specific styles in sections
-   - Dark mode variants immediately after base styles
-   - Z-index hierarchy must be maintained:
-     - Modals: 10001
-     - Overlay: 10000
-     - Backdrop: 9999
+- Use inline styles or scoped CSS modules (no global classes)
+- Maintain consistent layout using Flexbox
+- Ensure overlay panel max width is 1000px and height is 80vh
+- Follow 8px spacing grid for padding/margin
+- Z-Index:
+  - Modal: 10001
+  - Overlay: 10000
+  - Backdrop: 9999
 
-2. **Naming Conventions**
-   - Use BEM methodology
-   - Prefix classes with `chatgpt-enhancer-`
-   - Use semantic class names
-
-3. **Color System**
-   - Primary: #3b82f6 (Blue)
-   - Text: #111827 (Dark)
-   - Background: White
-   - Dark mode variants required
-
-4. **Layout**
-   - Use Flexbox/Grid for layouts
-   - Maintain consistent spacing (8px grid)
-   - Support responsive breakpoints
+---
 
 ## State Management
 
-### Storage Patterns
-1. **Chrome Storage**
-   - Use chrome.storage.local for persistence
-   - Implement proper error handling
-   - Cache frequently accessed data
-   - Handle storage limits
+### chrome.storage.local
+- For persistent folders and prompts (planned)
+- Use JSON-safe structures
+- Add migration versioning if schema evolves
 
-2. **Runtime State**
-   - Use proper state management patterns
-   - Implement proper cleanup
-   - Handle state conflicts
+### Runtime State
+- Centralized in `PromptManager`
+- Only `PromptManager` can update global state
+- UI components must re-render on changes via local state sync
+
+---
 
 ## Security Requirements
 
-1. **Content Security Policy**
-   - Strict CSP implementation required
-   - No inline scripts/styles
-   - Secure message passing between components
+- Enforce strict CSP in `manifest.json`
+- Never use inline JS or unsafe-eval
+- Sanitize all user input (prompt content)
+- Secure message passing between background and content scripts
 
-2. **Data Protection**
-   - Encrypt sensitive data
-   - Sanitize user inputs
-   - Prevent XSS attacks
-   - Handle permissions securely
+---
 
-## Performance Guidelines
+## Accessibility & Keyboard Navigation
 
-1. **DOM Operations**
-   - Batch DOM updates
-   - Use document fragments
-   - Implement proper event delegation
-   - Clean up event listeners
+- All interactive elements must be keyboard navigable
+- Implement proper focus trapping in modal
+- Use ARIA labels for screen readers (Planned)
+- Follow WCAG 2.1 AA where possible
 
-2. **Resource Management**
-   - Minimize memory usage
-   - Implement proper garbage collection
-   - Use efficient data structures
-   - Cache expensive computations
-
-## Accessibility Requirements
-
-1. **Keyboard Navigation**
-   - All features must be keyboard accessible
-   - Implement proper focus management
-   - Support standard keyboard shortcuts
-   - Trap focus in modals
-
-2. **Screen Reader Support**
-   - Use semantic HTML
-   - Implement ARIA labels
-   - Provide text alternatives
-   - Test with screen readers
+---
 
 ## Error Handling
 
-1. **Runtime Errors**
-   - Implement proper error boundaries
-   - Log errors appropriately
-   - Provide user feedback
-   - Handle recovery gracefully
+- Wrap React roots with error boundaries
+- Log unexpected errors to console with context
+- Provide fallbacks for missing folders or prompts
+- Gracefully handle chrome.storage failures
 
-2. **Edge Cases**
-   - Handle network failures
-   - Manage storage limits
-   - Handle permission changes
-   - Support offline operation
+---
 
-## Testing Requirements
+## Testing
 
-1. **Unit Tests**
-   - Test component functionality
-   - Verify state management
-   - Check error handling
-   - Validate accessibility
+### Unit Testing (Planned)
+- Component props and rendering
+- State sync in `PromptManager`
+- DOM injection lifecycle
 
-2. **Integration Tests**
-   - Test component interactions
-   - Verify storage operations
-   - Check DOM integration
-   - Validate event handling
+### Integration Testing (Planned)
+- Overlay interaction in ChatGPT page
+- Folder selection
+- Prompt creation workflows
 
-## Documentation
-
-1. **Code Comments**
-   - Document complex logic
-   - Explain non-obvious solutions
-   - Document known issues
-   - Include usage examples
-
-2. **Type Definitions**
-   - Use TypeScript where possible
-   - Document interfaces
-   - Define proper types
-   - Include JSDoc comments
+---
 
 ## Version Control
 
-1. **Commit Messages**
-   - Use conventional commits
-   - Reference issues/PRs
-   - Include context
-   - Document breaking changes
+- Use semantic commit messages (e.g., `fix:`, `feat:`, `refactor:`)
+- Reference issues or RIPER modes (e.g., `Ω₄`)
+- Maintain a clean `main` branch with feature branches off `develop`
+- Document all feature merges in `CHANGELOG.md`
 
-2. **Branch Strategy**
-   - Feature branches
-   - Release branches
-   - Hotfix branches
-   - Main/development branches
+---
 
-## Build and Deploy
+## Build & Deployment
 
-1. **Build Process**
-   - Minify and optimize
-   - Generate source maps
-   - Bundle efficiently
-   - Handle assets properly
+- Use `build-and-package.ps1` to create production zip
+- Ensure all assets and icons are included
+- Verify manifest version is bumped on release
+- Use feature flags or internal toggles for unfinished features
 
-2. **Deployment**
-   - Version management
-   - Release notes
-   - Update notifications
-   - Rollback strategy
+---
 
 ## Maintenance
 
-1. **Code Quality**
-   - Regular audits
-   - Performance monitoring
-   - Security updates
-   - Dependency management
+- Keep SPEC.md and Development Guidelines in sync
+- Update `progress.md` and `activeContext.md` regularly
+- Archive deprecated components with reason
+- Use MDC rules to protect critical files
 
-2. **User Support**
-   - Error tracking
-   - Usage analytics
-   - Feature requests
-   - Bug reports
+shorthand:
+  "!build": >
+    Run .\build-and-package.ps1 to build both:
+      - vite.content.config.ts
+      - vite.config.ts
+    The script handles both configs internally.
 
-- Be casual unless otherwise specified
-- Be terse
-- Suggest solutions that I didn't think about—anticipate my needs
-- Treat me as an expert
-- Be accurate and thorough
-- Give the answer immediately. Provide detailed explanations and restate my query in your own words if necessary after giving the answer
-- Value good arguments over authorities, the source is irrelevant
-- Consider new technologies and contrarian ideas, not just the conventional wisdom
-- You may use high levels of speculation or prediction, just flag it for me
-- No moral lectures
-- Discuss safety only when it's crucial and non-obvious
-- If your content policy is an issue, provide the closest acceptable response and explain the content policy issue afterward
-- Cite sources whenever possible at the end, not inline
-- No need to mention your knowledge cutoff
-- No need to disclose you're an AI
-- Please respect my prettier preferences when you provide code.
-- Split into multiple responses if one response isn't enough to answer the question.
+shorthand:
+  "!finalize": >
+    1. 🛠 Rebuild both Vite outputs:
+       .\build-and-package.ps1 --config vite.content.config.ts
+       .\build-and-package.ps1
+    2. 📚 Update docs/SPEC.md with:
+       - PromptManager now includes subscribe/notify listener system
+       - OverlayPanel and FolderList now reactive to updates
+    3. 🧠 Update memory-bank files:
+       - progress.md with [x] Implemented pub/sub via subscribe()
+       - activeContext.md with next task (e.g. inline prompt editing)
+    4. 🗃 Git commit:
+       git add .
+       git commit -m "Finalize Ω₄: Pub/Sub integration and reactive folder list"
+       git tag finalize-Ω₄-step3-$(Get-Date -Format 'yyyyMMdd-HHmm')
+    5. 🧭 Optionally:
+       git push --tags
 
-If I ask for adjustments to code I have provided you, do not repeat all of my code unnecessarily. Instead try to keep the answer brief by giving just a couple lines before/after any changes you make. Multiple code blocks are ok.
 
-Follow these guidelines to ensure consistent, maintainable, and high-quality development of the ChatGPT Enhancer Chrome Extension.
+
+
+
+
+
+---

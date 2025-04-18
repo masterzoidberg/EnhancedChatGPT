@@ -1,3 +1,7 @@
+import { Folder, Prompt } from './common';
+
+export type { Folder, Prompt };
+
 export enum MessageType {
   // State management
   GET_STATE = 'GET_STATE',
@@ -46,24 +50,6 @@ export interface ExtensionSettings {
     toggleOverlay: string;
     toggleQuickAccess: string;
   };
-}
-
-export interface Folder {
-  id: string;
-  name: string;
-  prompts: Prompt[];
-  createdAt: number;
-  updatedAt: number;
-}
-
-export interface Prompt {
-  id: string;
-  title: string;
-  content: string;
-  folderId: string;
-  isFavorite: boolean;
-  createdAt: number;
-  updatedAt: number;
 }
 
 export interface IPromptManager {

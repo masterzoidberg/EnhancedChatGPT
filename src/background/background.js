@@ -1,75 +1,82 @@
-// ChatGPT Enhancer - Background script
-console.log('ChatGPT Enhancer background script loaded');
-
-// This function logs icon paths to help with debugging
-function logIconPaths() {
-  const iconSizes = [16, 32, 48, 128];
-  console.log('Icon paths that should exist:');
-  
-  iconSizes.forEach(size => {
-    const path = `assets/icon${size}.png`;
-    console.log(`- ${path}`);
-  });
-}
-
-// Initialize when extension is installed or updated
-chrome.runtime.onInstalled.addListener(() => {
-  console.log('ChatGPT Enhancer extension installed/updated');
-  
-  // Log icon paths for debugging
-  logIconPaths();
-  
-  // Initialize storage with default values
-  chrome.storage.local.set({
+import { MessageType } from '../types/messages';
+const defaultSettings = {
+    theme: 'system',
+    quickAccessEnabled: true,
+    overlayEnabled: true,
+    keyboardShortcuts: {
+        toggleOverlay: 'Alt+Shift+O',
+        toggleQuickAccess: 'Alt+Shift+Q'
+    }
+};
+// Initialize extension state
+let state = {
     isEnabled: true,
-    settings: {
-      theme: 'system',
-      quickAccessEnabled: true,
-      overlayEnabled: true
-    },
+    settings: defaultSettings,
     folders: []
-  }, () => {
-    console.log('Default settings initialized');
-  });
+};
+// Load state from storage
+chrome.storage.local.get(['state'], (result) => {
+    if (result.state) {
+        state = result.state;
+    }
+    else {
+        chrome.storage.local.set({ state });
+    }
 });
-
-// Listen for messages from content scripts
+// Handle messages from content scripts and popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('Background script received message:', message);
-  
-  // Simple message acknowledgment
-  sendResponse({ status: 'received' });
-  return true;
+    let favoritePrompts = [];
+    switch (message.type) {
+        case MessageType.GET_STATE:
+            sendResponse(state);
+            break;
+        case MessageType.TOGGLE_ENABLED:
+            state.isEnabled = !state.isEnabled;
+            chrome.storage.local.set({ state });
+            sendResponse(state);
+            break;
+        case MessageType.UPDATE_SETTINGS:
+            if (message.settings) {
+                state.settings = Object.assign(Object.assign({}, state.settings), message.settings);
+                chrome.storage.local.set({ state });
+            }
+            sendResponse(state);
+            break;
+        case MessageType.GET_FAVORITE_PROMPTS:
+            favoritePrompts = state.folders
+                .flatMap(folder => folder.prompts)
+                .filter(prompt => prompt.isFavorite);
+            sendResponse(favoritePrompts);
+            break;
+        case MessageType.SAVE_PROMPT:
+            if (message.prompt) {
+                const folder = state.folders.find(f => { var _a; return f.id === ((_a = message.prompt) === null || _a === void 0 ? void 0 : _a.folderId); });
+                if (folder) {
+                    const promptIndex = folder.prompts.findIndex(p => { var _a; return p.id === ((_a = message.prompt) === null || _a === void 0 ? void 0 : _a.id); });
+                    if (promptIndex >= 0) {
+                        folder.prompts[promptIndex] = message.prompt;
+                    }
+                    else {
+                        folder.prompts.push(message.prompt);
+                    }
+                    chrome.storage.local.set({ state });
+                }
+            }
+            sendResponse(state);
+            break;
+    }
 });
-
-// Listen for tab updates
+// Handle tab updates to inject content scripts
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url?.includes('chat.openai.com')) {
-    console.log('ChatGPT page detected');
-  }
-});
-
-// Set up the extension icon to show enabled/disabled state
-function updateIcon(isEnabled) {
-  const iconPath = isEnabled 
-    ? {
-        16: 'assets/icon16.png',
-        32: 'assets/icon32.png',
-        48: 'assets/icon48.png',
-        128: 'assets/icon128.png'
-      }
-    : {
-        16: 'assets/icon16-disabled.png',
-        32: 'assets/icon32-disabled.png',
-        48: 'assets/icon48-disabled.png',
-        128: 'assets/icon128-disabled.png'
-      };
-  
-  chrome.action.setIcon({ path: iconPath });
-}
-
-// Initialize icon state
-chrome.storage.local.get('isEnabled', (result) => {
-  const isEnabled = result.isEnabled !== undefined ? result.isEnabled : true;
-  updateIcon(isEnabled);
+    var _a;
+    if (changeInfo.status === 'complete' && ((_a = tab.url) === null || _a === void 0 ? void 0 : _a.includes('chat.openai.com'))) {
+        chrome.scripting.executeScript({
+            target: { tabId },
+            files: ['content/content.js']
+        }).catch(err => console.error('Failed to inject content script:', err));
+        chrome.scripting.insertCSS({
+            target: { tabId },
+            files: ['content/contentStyle.css']
+        }).catch(err => console.error('Failed to inject CSS:', err));
+    }
 });

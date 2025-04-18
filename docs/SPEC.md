@@ -13,6 +13,7 @@ A Chrome Extension that enhances the ChatGPT interface with folder management, p
    - ✅ Basic tabbed interface
    - ✅ Two-pane layout with sidebar and main content
    - ✅ Toggle button with drag functionality
+   - ✅ Folder sidebar populated from PromptManager
 
    #### Planned Enhancements
    - 🔄 Keyboard navigation system
@@ -29,6 +30,14 @@ A Chrome Extension that enhances the ChatGPT interface with folder management, p
    - ✅ Basic CRUD operations
    - ✅ Search functionality
    - ✅ Keyboard shortcuts
+   - ✅ Hardcoded folder list with active state tracking
+   - ✅ Centralized type definitions in `types/common.ts`
+   - ✅ Timestamp tracking for folders and prompts
+   - ✅ Subscribe/notify system for reactive components
+     - Lightweight pub/sub implementation
+     - Component subscription via useEffect
+     - Automatic cleanup on unmount
+     - State sync across components
 
    #### Planned Enhancements
    - 🔄 Enhanced Prompt Display
@@ -54,9 +63,9 @@ A Chrome Extension that enhances the ChatGPT interface with folder management, p
    - ✅ Handles extension initialization
    - ✅ Manages overlay visibility
    - ✅ Implements drag-and-drop functionality
+   - ✅ Shadow DOM isolation added for React root stability
 
    #### Planned Improvements
-   - 🔄 Shadow DOM implementation for isolation
    - 🔄 Enhanced mutation observation
    - 🔄 Improved error resilience
 
@@ -68,6 +77,7 @@ A Chrome Extension that enhances the ChatGPT interface with folder management, p
    - ✅ Folder items with actions (edit, delete)
    - ✅ Basic folder styling
    - ✅ Simple color scheme
+   - ✅ Active folder highlighting
 
    #### Planned Enhancements
    - 🔄 Improved Color Contrast
@@ -83,6 +93,7 @@ A Chrome Extension that enhances the ChatGPT interface with folder management, p
    - Flexible width (80% of viewport, max 1000px)
    - Displays prompts for selected folder
    - Add/Edit/Delete prompt functionality
+   - Displays active folder ID (for testing)
 
 3. **Quick Access Toolbar**
    #### Planned Implementation
@@ -97,6 +108,7 @@ A Chrome Extension that enhances the ChatGPT interface with folder management, p
    - ✅ Simple data structures
    - ✅ User preferences
    - ✅ Layout settings
+   - ✅ PromptManager API includes stubbed saveFolders()
 
 2. **Planned Enhancements**
    - 🔄 IndexedDB Integration
@@ -118,6 +130,7 @@ A Chrome Extension that enhances the ChatGPT interface with folder management, p
      - Overlay functionality
      - Prompt manager operations
      - Storage operations
+     - Folder selection
 
 2. **Integration Testing**
    - 🔄 Cross-browser compatibility
@@ -175,6 +188,9 @@ A Chrome Extension that enhances the ChatGPT interface with folder management, p
    - Z-index conflicts
      - Root cause: Inconsistent z-index management
      - Solution: Implement z-index reservation system
+   - Type inference errors in PromptManager usage
+     - Root cause: TypeScript not recognizing methods after class edits
+     - Planned fix: Ensure types are fully exported and properly used across components
 
 2. **Preventive Measures**
    - Safe DOM Manipulation
@@ -192,6 +208,7 @@ A Chrome Extension that enhances the ChatGPT interface with folder management, p
 2. Fix folder deletion issues
 3. Add keyboard navigation
 4. Improve error handling
+5. Implement base folder rendering and selection UI ✅
 
 ### Phase 2: UI Enhancement
 1. Implement folder customization
@@ -207,12 +224,15 @@ A Chrome Extension that enhances the ChatGPT interface with folder management, p
 
 ## Version History
 - 1.0.0: Initial implementation
-- 1.0.1: Added two-pane overlay panel layout
+- 1.0.1: Added two-pane overlay panel layout + folder sidebar
 
 ## Change Log
 ### 1.0.1 (Current)
 - Added two-pane overlay panel layout
 - Implemented basic UI components
+- Added folder sidebar with active folder logic
+- Implemented hardcoded folder list in PromptManager
+- Integrated OverlayPanel with PromptManager APIs
 - Added dark mode support
 - Improved accessibility
 - Enhanced CSS organization
@@ -222,5 +242,10 @@ A Chrome Extension that enhances the ChatGPT interface with folder management, p
 - Basic extension structure
 - Quick access bar implementation
 
+## Recent Updates
+✅ Added pub/sub system to PromptManager
+✅ Reactive OverlayPanel with live folder/prompt updates
+✅ Merged type definitions to common.ts
+
 ---
-Note: This specification is a living document and will be updated as the extension evolves. All changes should be documented here to maintain consistency and track the project's development. 
+Note: This specification is a living document and will be updated as the extension evolves. All changes should be documented here to maintain consistency and track the project's development.

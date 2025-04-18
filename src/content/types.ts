@@ -1,20 +1,6 @@
-import { OverlayPanelProps } from '@/components/OverlayPanel';
-
-export interface Prompt {
-  id: string;
-  title: string;
-  content: string;
-  isFavorite: boolean;
-  folderId: string;
-  createdAt: number;
-  updatedAt: number;
-}
-
-export interface Folder {
-  id: string;
-  name: string;
-  prompts: Prompt[];
-}
+import { OverlayPanelProps } from '@/components/features/OverlayPanel';
+import { QuickAccessBarProps } from '@/types/messages';
+import { Folder, Prompt } from '@/types/common';
 
 export interface IPromptManager {
   getFavoritePrompts(): Promise<Prompt[]>;
@@ -25,12 +11,10 @@ export interface IPromptManager {
   createPrompt(prompt: Omit<Prompt, 'id'>): Promise<Prompt>;
   updatePrompt(prompt: Prompt): Promise<void>;
   deletePrompt(promptId: string): Promise<void>;
-}
-
-export interface QuickAccessBarProps {
-  isVisible: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
+  subscribe(callback: () => void): () => void;
+  getActiveFolderId(): string | null;
+  getFolderPrompts(folderId: string): Promise<Prompt[]>;
+  selectPrompt(prompt: Prompt): Promise<void>;
 }
 
 export interface PromptManagerProps {
@@ -42,4 +26,6 @@ export interface ContentScriptState {
   overlayPanel: React.ComponentType<OverlayPanelProps> | null;
   quickAccessBar: React.ComponentType<QuickAccessBarProps> | null;
   promptManager: IPromptManager;
-} 
+}
+
+export type { OverlayPanelProps, QuickAccessBarProps }; 

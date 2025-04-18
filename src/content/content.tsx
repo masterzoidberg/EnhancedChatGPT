@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom/client';
-import { OverlayPanel } from '@/components/OverlayPanel';
-import { PromptManager } from '@/utils/PromptManager';
+import { createRoot } from 'react-dom/client';
+import { OverlayPanel } from '@/components/features/OverlayPanel';
+import { PromptManager } from '@/components/features/PromptManager';
+import { QuickAccessBar } from '@/components/features/QuickAccessBar';
+import { Message, MessageType } from '@/types/messages';
+import { IPromptManager } from '@/content/types';
 
-const promptManager = new PromptManager();
+const promptManager: IPromptManager = new PromptManager();
 
 const containerId = 'chatgpt-enhancer-overlay-root';
 
@@ -59,5 +62,5 @@ const App = () => {
 
 injectOverlayRoot();
 
-const root = ReactDOM.createRoot(document.getElementById(containerId)!);
+const root = createRoot(document.getElementById(containerId)!);
 root.render(<App />);

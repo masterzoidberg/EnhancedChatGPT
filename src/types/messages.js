@@ -1,0 +1,25 @@
+export var MessageType;
+(function (MessageType) {
+    // State management
+    MessageType["GET_STATE"] = "GET_STATE";
+    MessageType["TOGGLE_ENABLED"] = "TOGGLE_ENABLED";
+    MessageType["TOGGLE_EXTENSION"] = "TOGGLE_EXTENSION";
+    MessageType["UPDATE_SETTINGS"] = "UPDATE_SETTINGS";
+    MessageType["GET_FAVORITE_PROMPTS"] = "GET_FAVORITE_PROMPTS";
+    MessageType["STATE_CHANGED"] = "STATE_CHANGED";
+    // Prompt management
+    MessageType["SAVE_PROMPT"] = "SAVE_PROMPT";
+    MessageType["DELETE_PROMPT"] = "DELETE_PROMPT";
+    MessageType["GET_PROMPTS"] = "GET_PROMPTS";
+    MessageType["UPDATE_PROMPT"] = "UPDATE_PROMPT";
+    // Folder management
+    MessageType["CREATE_FOLDER"] = "CREATE_FOLDER";
+    MessageType["DELETE_FOLDER"] = "DELETE_FOLDER";
+    MessageType["RENAME_FOLDER"] = "RENAME_FOLDER";
+    MessageType["MOVE_PROMPT"] = "MOVE_PROMPT";
+    // UI actions
+    MessageType["INITIALIZE"] = "INITIALIZE";
+    MessageType["SHOW_OVERLAY"] = "SHOW_OVERLAY";
+    MessageType["HIDE_OVERLAY"] = "HIDE_OVERLAY";
+    MessageType["TOGGLE_QUICK_ACCESS"] = "TOGGLE_QUICK_ACCESS";
+})(MessageType || (MessageType = {}));

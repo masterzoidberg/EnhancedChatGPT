@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
-import { Folder, Prompt } from '@/types/messages';
-import { generateId, validatePrompt, validateFolder } from '@/utils/helpers';
+import { ExtensionSettings } from '@/types/messages';
+import { Folder, Prompt } from '@/types/common';
+import { generateId, validateFolder, validatePrompt } from '@/utils/helpers';
 
 interface UsePromptsOptions {
   initialFolders?: Folder[];

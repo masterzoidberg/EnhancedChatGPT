@@ -1,4 +1,5 @@
-import { Message, MessageType, ExtensionState, ExtensionSettings, Folder, Prompt } from '../types/messages';
+import { Message, MessageType, ExtensionState, ExtensionSettings } from '../types/messages';
+import { Folder, Prompt } from '../types/common';
 
 const defaultSettings: ExtensionSettings = {
   theme: 'system',
@@ -28,6 +29,8 @@ chrome.storage.local.get(['state'], (result) => {
 
 // Handle messages from content scripts and popup
 chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
+  let favoritePrompts: Prompt[] = [];
+  
   switch (message.type) {
     case MessageType.GET_STATE:
       sendResponse(state);
@@ -48,7 +51,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
       break;
     
     case MessageType.GET_FAVORITE_PROMPTS:
-      const favoritePrompts = state.folders
+      favoritePrompts = state.folders
         .flatMap(folder => folder.prompts)
         .filter(prompt => prompt.isFavorite);
       sendResponse(favoritePrompts);

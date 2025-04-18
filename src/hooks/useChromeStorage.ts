@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ExtensionSettings, Folder } from '@/types/messages';
+import { ExtensionSettings } from '@/types/messages';
+import { Folder } from '@/types/common';
 
 type StorageKey = 'folders' | 'settings' | 'isEnabled';
 
